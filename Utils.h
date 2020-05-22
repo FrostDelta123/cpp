@@ -11,6 +11,8 @@ class Utils {
 public:
     static bool isValid(string &);
     static Date parse(string);
+    static void open();
+    static void checkFile();
 };
 
 
