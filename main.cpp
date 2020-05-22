@@ -18,8 +18,10 @@ int main () {
 
 void open(){
     if(!FileUtil::checkFile()){
+        FILE* file;
         cout << "Файл не найден или пуст, создаём. Перед работой требуется заполнить файл." << endl;
-        fopen("person.dat", "a+t");
+        file = fopen("person.dat", "a+t");
+        fclose(file);
     }
     string n;
     cout << "Введите номер действия: " << endl;
@@ -39,12 +41,13 @@ void open(){
         open();
     }
     switch(stoi(n)){
+        //Готово, корректно.
         case 0: {
             exit(0);
         }
+        //Готово, корректно.
         case 1:{
             FileUtil::enterStudent();
-            //FileUtil::test();
             open();
         }
         case 2:{
@@ -53,24 +56,28 @@ void open(){
                 open();
             }
         }
+        //Готово, корректно.
         case 3:{
             if(FileUtil::isEmpty()){
                 cout << "Файл пуст. Перед работой требуется заполнить файл." << endl;
                 open();
             }
-            //Доделать
             FileUtil::printAll();
+            open();
         }
         case 4:{
-            string date;
-            getline(cin, date);
-            cout << Date::isValid(date) << endl;
+            if(FileUtil::isEmpty()){
+                cout << "Файл пуст. Перед работой требуется заполнить файл." << endl;
+                open();
+            }
+            open();
         }
         case 5:{
             if(FileUtil::isEmpty()){
                 cout << "Файл пуст. Перед работой требуется заполнить файл." << endl;
                 open();
             }
+            open();
         }
     }
 }

@@ -16,6 +16,7 @@ public:
     static void printAll();
     static bool isEmpty();
     static void enterStudent();
+    static struct Student findStudent(int zach);
 };
 
 

@@ -3,42 +3,41 @@
 #include "Utils.h"
 #include <iostream>
 #include <fstream>
-#include <stdio.h>
 #include <string>
 
 using namespace std;
 
 struct Session{
-    char subj[80][100];
+    char subj[100][200];
     int marks[10];
 } typedef Session;
 
-struct student{
-    //char name[40];
-    //char birth[15];
-    //int postup;
-    //char kaf[25];
-    //char group[10];
-    //int zachetka;
-    //Вроде того, test - структура сессии с оценками и предметами
+struct Student{
+    char name[40];
+    char birth[15];
+    int postup;
+    char kaf[25];
+    char group[10];
+    int zachetka;
     Session sessions[9];
     //int gender;
-} typedef student;
+} typedef Student;
 
 
 
 
 //Не работает как надо, переделать с 0
 int FileUtil::getStudentCount(){
-    char *str = new char [1024];
-    int i=0;
-    ifstream base("person.dat");
-    while (!base.eof()){
-        base.getline(str, 1024, '\n');
-        i++;
+    int i = 0;
+    FILE *file;
+    file = fopen("person.dat", "r+");
+    struct Student output;
+    while(!feof(file)){
+        if(fread(&output, sizeof(struct Student), 1, file)){
+            i++;
+        }
     }
-    base.close();
-    delete str;
+    fclose(file);
     cout << i << endl;
     return i;
 }
@@ -47,11 +46,11 @@ bool FileUtil::isEmpty(){
     ifstream base("person.dat");
     if (base.is_open ()){
         base.seekg (0, ios::end);
-        int size = base.tellg ();
+        int size = base.tellg();
         base.seekg (0, ios::beg);
 
         if (size == 0){
-            base.close ( );
+            base.close();
             return true;
         }
     }
@@ -66,22 +65,26 @@ bool FileUtil::checkFile() {
 
 void FileUtil::printAll(){
     FILE *file;
-    file = fopen("person.dat", "r+");
     int n = FileUtil::getStudentCount();
+    file = fopen("person.dat", "r+");
+    cout << "ФИО | Дата рождения | Год поступления | Кафедра | Группа | Номер зачётки" << endl;
     for(int i = 0; i < n; i++) {
-        struct student output1;
-        fread(&output1, sizeof(struct student), 1, file);
+        struct Student output1;
+        fread(&output1, sizeof(struct Student), 1, file);
+        printf_s("%s, %s, %d, %s, %s, %d \n", output1.name, output1.birth, output1.postup, output1.kaf, output1.group, output1.zachetka);
+        //cout << output1.name, output1.birth, output1.postup, output1.kaf, output1.group, output1.zachetka << endl;
         //Вывод говно.
         //printf("%s, %s, %d, {%d %d ...}\n", output1.name, output1.birth, output1.age, output1.tabel[0], output1.tabel[1]);
     }
+    fclose(file);
 }
 
 
 
-//TODO возможно добавить валидатор строк (чтоб не было строк только из чисел/англ букв и тп. Хз, надо ли это)
+//TODO Экстренный выход из любого места. Не факт, что надо
 void FileUtil::enterStudent(){
-    struct student stud;
-    /*string fa, name, ot, fio, date, kaf, group;
+    struct Student stud;
+    string fa, name, ot, fio, date, kaf, group;
     cout << "Введите Фамилию." << endl;
     getline(cin, fa);
     fio.append(fa);
@@ -110,11 +113,10 @@ void FileUtil::enterStudent(){
     cout << "Введите факультет, кафедру." << endl;
     getline(cin, kaf);
     strcpy_s(stud.kaf, kaf.c_str());
-
-    //сделать возможность пробелов для группы
     cout << "Введите группу." << endl;
     getline(cin, group);
     strcpy_s(stud.group, group.c_str());
+    //Номер должен быть уникален!
     cout << "Введите номер зачётки." << endl;
     string temp2;
     getline(cin, temp2);
@@ -123,7 +125,7 @@ void FileUtil::enterStudent(){
         getline(cin, temp2);
     }
     stud.zachetka = stoi(temp2);
-         */
+
     int x;
     string str;
     cout << "Введите количество сессий" << endl;
@@ -159,7 +161,7 @@ void FileUtil::enterStudent(){
             cout << "Введите предмет." << endl;
             getline(cin, subj);
             char ff[100];
-            strcpy_s(ff, subj.c_str());
+            strcpy(ff, subj.c_str());
             strcpy_s(session.subj[num], ff);
 
             cout << "Введите оценку по предмету " + subj << endl;
@@ -173,30 +175,42 @@ void FileUtil::enterStudent(){
                 getline(cin, tem);
             }
             session.marks[num] = stoi(tem);
-            stud.sessions[x] = session;
-            cout << stud.sessions[0].subj[0] << endl;
-            cout << stud.sessions[0].marks[0] << endl;
+            stud.sessions[num] = session;
         }
 
     }
-    cout << "top" << endl;
+    cout << "Данные студента успешно сохранены!" << endl;
     FILE* file;
     file = fopen ("person.dat", "a");
-    fwrite(&stud, sizeof(struct student),1, file);
+    fwrite(&stud, sizeof(struct Student),1, file);
     fclose(file);
 }
 
 
+
+Student FileUtil::findStudent(int zach){
+    FILE *file;
+    file = fopen("person.dat", "r+");
+    struct Student output;
+    while(!feof(file)){
+        if(fread(&output, sizeof(struct Student), 1, file)){
+            if(output.zachetka == zach){
+                fclose(file);
+                return output;
+            }
+        }
+    }
+    fclose(file);
+}
+
 void FileUtil::test() {
     FILE *file2;
+    int n = FileUtil::getStudentCount();
     file2 = fopen("person.dat", "r+");
-
-    //Сделать нормальный счёт
-    int n = 1;
     for(int i = 0; i < n; i++) {
-        student output1;
-        fread(&output1, sizeof(struct student), 1, file2);
-        cout << output1.sessions[0].subj[0] << endl;
+        struct Student output1;
+        fread(&output1, sizeof(struct Student), 1, file2);
+        cout << output1.name << endl;
     }
     fclose(file2);
  /*   FILE *file;
