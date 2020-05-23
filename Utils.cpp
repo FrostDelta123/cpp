@@ -32,14 +32,15 @@ void Utils::open(){
     cout << "3. Список всех студентов." << endl;
     cout << "4. Изменить информацию о студенте." << endl;
     cout << "5. Отсортировать." << endl;
+    cout << "6. Вывести все оценки студента." << endl;
     cout << "0. Выход." << endl;
     getline(cin, n);
     if(!Utils::isValid(n)){
         cout << "Введите число от 0 до 5" << endl;
         Utils::open();
     }
-    if((stoi(n) > 5 || stoi(n) < 0)){
-        cout << "Введите число от 0 до 5" << endl;
+    if((stoi(n) > 6 || stoi(n) < 0)){
+        cout << "Введите число от 0 до 6" << endl;
         Utils::open();
     }
     switch(stoi(n)){
@@ -47,30 +48,60 @@ void Utils::open(){
         case 0: {
             exit(0);
         }
-            //Готово, корректно.
+        //Готово, корректно.
         case 1:{
             FileUtil::enterStudent();
             Utils::open();
         }
+        //Готово, корректно.
         case 2:{
             Utils::checkFile();
-            FileUtil::test();
+            string zach;
+            cout << "Введите номер зачётки для удаления." << endl;
+            getline(cin, zach);
+            while(!isValid(zach)){
+                cout << "Номер введён неверно." << endl;
+                getline(cin, zach);
+            }
+            FileUtil::studentAction(stoi(zach), 1);
             Utils::open();
         }
-            //Готово, корректно.
+        //Готово, корректно.
         case 3:{
             Utils::checkFile();
             FileUtil::printAll();
             Utils::open();
         }
+        //Готово, корректно.
         case 4:{
             Utils::checkFile();
+            string zach;
+            cout << "Введите номер зачётки для внесения правок." << endl;
+            getline(cin, zach);
+            while(!isValid(zach)){
+                cout << "Номер введён неверно." << endl;
+                getline(cin, zach);
+            }
+            FileUtil::studentAction(stoi(zach), 2);
             Utils::open();
         }
         case 5:{
             Utils::checkFile();
+            //Сортировка
             Utils::open();
         }
+
+        case 6:
+            Utils::checkFile();
+            string zach;
+            cout << "Введите номер зачётки." << endl;
+            getline(cin, zach);
+            while(!isValid(zach)){
+                cout << "Номер введён неверно." << endl;
+                getline(cin, zach);
+            }
+            FileUtil::allStudentMarks(stoi(zach));
+            Utils::open();
     }
 }
 

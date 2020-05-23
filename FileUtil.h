@@ -10,14 +10,17 @@ class FileUtil {
 
 
 public:
-    static void test();
     static int getStudentCount();
     static bool checkFile();
     static void printAll();
     static bool isEmpty();
     static void enterStudent();
-    static struct Student findStudent(int zach);
     static int validateStudent(int);
+    static void studentAction(int, int);
+    static void recreateFileWithDelete(int);
+    static void recreateFileWithEdit(int);
+    static void allStudentMarks(int);
+    static void printMarks(struct Student);
 };
 
 
