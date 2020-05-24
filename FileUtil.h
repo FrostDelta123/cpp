@@ -21,6 +21,9 @@ public:
     static void recreateFileWithEdit(int);
     static void allStudentMarks(int);
     static void printMarks(struct Student);
+    static void sorting(int);
+    static bool calculate(int, struct Student);
+    static bool genderCheck(int, struct Student);
 };
 
 

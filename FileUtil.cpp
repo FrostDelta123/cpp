@@ -42,10 +42,7 @@ int FileUtil::validateStudent(int num){
                     cout << "Ошибка ввода, введите новый номер или напишите 0 чтобы прервать." << endl;
                     getline(cin, temp);
                 }
-                if(stoi(temp) == 0){
-                    fclose(file);
-                    Utils::open();
-                }
+                fclose(file);
                 FileUtil::validateStudent(stoi(temp));
             }
         }
@@ -119,6 +116,68 @@ void FileUtil::printMarks(Student output){
     Utils::open();
 }
 
+bool FileUtil::genderCheck(int gender, Student student){
+    return student.gender == gender || gender == 3;
+}
+
+
+//Почти работает, дебагнуть и дофиксить.
+bool FileUtil::calculate(int action, Student student){
+    double first = 0, second = 0, all = 0;
+    switch (action) {
+        case 1:{
+            int count = student.sessionsCout;
+            for(int i = 0; i < count; i++){
+                int subjCount = student.sessions[i].count;
+                for(int x = 0; x < subjCount; x++){
+                    if(student.sessions[i].marks[x] == 3){
+                        first++;
+                    }
+                    all++;
+                }
+            }
+            return first/all < 0.25;
+        }
+        case 2:{
+
+        }
+        case 3:{
+
+        }
+        case 4:{
+
+        }
+        case 5:{
+
+        }
+        default:{
+            cout << "Магическая ошибка" << endl;
+            Utils::open();
+        }
+    }
+}
+
+void FileUtil::sorting(int action){
+    FILE *file;
+    Student output;
+    file = fopen("person.dat", "r+");
+    cout << "Введите код сортировки по полу." << endl;
+    cout << "1. Мужской." << endl;
+    cout << "2. Женский." << endl;
+    cout << "3. Любой." << endl;
+    int code = Utils::validateInt(1, 3);
+    while (!feof(file)) {
+        if (fread(&output, sizeof(struct Student), 1, file)) {
+            if (FileUtil::calculate(action, output) && FileUtil::genderCheck(code, output)) {
+                cout << "ФИО | Дата рождения | Год поступления | Кафедра | Группа | Номер зачётки" << endl;
+                printf_s("%s, %s, %d, %s, %s, %d \n", output.name, output.birth, output.postup, output.kaf, output.group, output.zachetka);
+                FileUtil::printMarks(output);
+            }
+        }
+    }
+    Utils::open();
+}
+
 void FileUtil::allStudentMarks(int zach){
     FILE *file;
     Student output;
@@ -187,16 +246,9 @@ void FileUtil::recreateFileWithEdit(int zach){
             cout << "6. Изменить номер зачётки." << endl;
             cout << "7. Изменить пол." << endl;
             cout << "8. Изменить информацию о сессиях." << endl;
-            string action;
-            getline(cin, action);
-            while(!Utils::isValid(action)){
-                while(stoi(action) < 1 && stoi(action) > 8) {
-                    cout << "Выбрано неверное действие, повторите ввод." << endl;
-                    getline(cin, action);
-                }
-            }
+            int action = Utils::validateInt(1, 8);
             string fa, name, ot, fio, date, fak, kaf, group;
-            switch (stoi(action)) {
+            switch (action) {
                 case 1: {
                     cout << "Введите Фамилию." << endl;
                     getline(cin, fa);
@@ -266,70 +318,34 @@ void FileUtil::recreateFileWithEdit(int zach){
                 }
                 case 7:{
                     cout << "Введите пол. 1 - М, 2 - Ж" << endl;
-                    string gender;
-                    getline(cin, gender);
-                    while (!Utils::isValid(gender)) {
-                        cout << "Введите пол. 1 - М, 2 - Ж" << endl;
-                        getline(cin, gender);
-                    }
-                    while (stoi(gender) != 1 && stoi(gender) != 2) {
-                        cout << "Введите пол. 1 - М, 2 - Ж" << endl;
-                        getline(cin, gender);
-                    }
-                    output1.gender = stoi(gender);
+                    int gender = Utils::validateInt(1, 2);
+                    output1.gender = gender;
                     cout << "Пол изменен." << endl;
                     break;
                 }
                 case 8:{
                     int x;
-                    string str;
+                    int str = Utils::validateInt(1, 9);
                     cout << "Введите количество сессий" << endl;
-                    getline(cin, str);
-                    while (!Utils::isValid(str)) {
-                        cout << "Введите число от 1 до 9.";
-                        getline(cin, str);
-                    }
-                    while (stoi(str) <= 0 || stoi(str) > 9) {
-                        cout << "Введите число от 1 до 9.";
-                        getline(cin, str);
-                    }
-                    output1.sessionsCout = stoi(str);
-                    x = stoi(str);
+                    output1.sessionsCout = str;
+                    x = str;
                     for (int y = 0; y < x; y++) {
                         //Фикс номра
                         cout << "Введите данные для сессии #" + to_string(y) << endl;
-                        string subj, tem;
-                        string count;
+                        string subj;
                         cout << "Введите количество предметов в данной сессии." << endl;
-                        getline(cin, count);
-                        while (!Utils::isValid(count)) {
-                            cout << "Введите цифру от 1 до 10" << endl;
-                            getline(cin, count);
-                        }
-                        while (stoi(count) < 1 || stoi(count) > 10) {
-                            cout << "Введите цифру от 1 до 10" << endl;
-                            getline(cin, count);
-                        }
+                        int count = Utils::validateInt(1, 10);
                         Session session;
-                        session.count = stoi(count);
-                        for (int num = 0; num < stoi(count); num++) {
+                        session.count = count;
+                        for (int num = 0; num < count; num++) {
                             cout << "Введите предмет." << endl;
                             getline(cin, subj);
                             char ff[100];
                             strcpy(ff, subj.c_str());
                             strcpy_s(session.subj[num], ff);
-
                             cout << "Введите оценку по предмету " + subj << endl;
-                            getline(cin, tem);
-                            while (!Utils::isValid(tem)) {
-                                cout << "Оценка введена неверно, повторите." << endl;
-                                getline(cin, tem);
-                            }
-                            while (stoi(tem) < 2 || stoi(tem) > 5) {
-                                cout << "Оценка введена неверно, повторите. Введите число от 2 до 5." << endl;
-                                getline(cin, tem);
-                            }
-                            session.marks[num] = stoi(tem);
+                            int tem = Utils::validateInt(2, 5);
+                            session.marks[num] = tem;
                             output1.sessions[y] = session;
                         }
                     }
@@ -387,7 +403,8 @@ void FileUtil::recreateFileWithDelete(int zach){
     Utils::open();
 }
 
-//TODO Экстренный выход из любого места. Не факт, что надо
+
+//TODO Валидатор числа. Важно
     void FileUtil::enterStudent() {
         Student stud;
         string fa, name, ot, fio, date, fak, kaf, group;
@@ -434,67 +451,31 @@ void FileUtil::recreateFileWithDelete(int zach){
         }
         stud.zachetka = FileUtil::validateStudent(stoi(temp2));
         cout << "Введите пол. 1 - М, 2 - Ж" << endl;
-        string gender;
-        getline(cin, gender);
-        while (!Utils::isValid(gender)) {
-            cout << "Введите пол. 1 - М, 2 - Ж" << endl;
-            getline(cin, gender);
-        }
-        while (stoi(gender) != 1 && stoi(gender) != 2) {
-            cout << "Введите пол. 1 - М, 2 - Ж" << endl;
-            getline(cin, gender);
-        }
-        stud.gender = stoi(gender);
+        int gender = Utils::validateInt(1, 2);;
+        stud.gender = gender;
         int x;
-        string str;
         cout << "Введите количество сессий" << endl;
-        getline(cin, str);
-        while (!Utils::isValid(str)) {
-            cout << "Введите число от 1 до 9.";
-            getline(cin, str);
-        }
-        while (stoi(str) <= 0 || stoi(str) > 9) {
-            cout << "Введите число от 1 до 9.";
-            getline(cin, str);
-        }
-        stud.sessionsCout = stoi(str);
-        x = stoi(str);
+        int str = Utils::validateInt(1, 9);
+        stud.sessionsCout = str;
+        x = str;
         for (int y = 0; y < x; y++) {
             //Номер сессии бля
             cout << "Введите данные для сессии #" + to_string(y) << endl;
-            string subj, tem;
-            string count;
+            string subj;
             cout << "Введите количество предметов в данной сессии." << endl;
-            getline(cin, count);
-            while (!Utils::isValid(count)) {
-                cout << "Введите цифру от 1 до 10" << endl;
-                getline(cin, count);
-            }
-            while (stoi(count) < 1 || stoi(count) > 10) {
-                cout << "Введите цифру от 1 до 10" << endl;
-                getline(cin, count);
-            }
+            int count = Utils::validateInt(1, 10);
             Session session;
-            session.count = stoi(count);
-            for (int num = 0; num < stoi(count); num++) {
+            session.count = count;
+            for (int num = 0; num < count; num++) {
                 cout << "Введите предмет." << endl;
                 getline(cin, subj);
                 char ff[100];
                 strcpy(ff, subj.c_str());
                 strcpy_s(session.subj[num], ff);
-
                 cout << "Введите оценку по предмету " + subj << endl;
-                getline(cin, tem);
-                while (!Utils::isValid(tem)) {
-                    cout << "Оценка введена неверно, повторите." << endl;
-                    getline(cin, tem);
-                }
-                while (stoi(tem) < 2 || stoi(tem) > 5) {
-                    cout << "Оценка введена неверно, повторите. Введите число от 2 до 5." << endl;
-                    getline(cin, tem);
-                }
+                int tem = Utils::validateInt(2, 5);
                 cout << to_string(num) + " " + to_string(y) << endl;
-                session.marks[num] = stoi(tem);
+                session.marks[num] = tem;
                 stud.sessions[y] = session;
             }
 

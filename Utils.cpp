@@ -18,6 +18,22 @@ void Utils::checkFile(){
     }
 }
 
+int Utils::validateInt(int min, int max){
+    string tempStr;
+    cout << "Введите число от " + to_string(min) + " до " + to_string(max) << endl;
+    while(true) {
+        getline(cin, tempStr);
+        if(isValid(tempStr)){
+            if(stoi(tempStr) >= min && stoi(tempStr) <= max) {
+                return stoi(tempStr);
+            }
+        }
+        cout << "Вы ввели неверное число, повторите ввод" << endl;
+    }
+}
+
+
+
 void Utils::open(){
     if(!FileUtil::checkFile()){
         FILE* file;
@@ -25,7 +41,6 @@ void Utils::open(){
         file = fopen("person.dat", "a+t");
         fclose(file);
     }
-    string n;
     cout << "Введите номер действия: " << endl;
     cout << "1. Добавить студентов." << endl;
     cout << "2. Удалить студента." << endl;
@@ -34,16 +49,9 @@ void Utils::open(){
     cout << "5. Отсортировать." << endl;
     cout << "6. Вывести все оценки студента." << endl;
     cout << "0. Выход." << endl;
-    getline(cin, n);
-    if(!Utils::isValid(n)){
-        cout << "Введите число от 0 до 5" << endl;
-        Utils::open();
-    }
-    if((stoi(n) > 6 || stoi(n) < 0)){
-        cout << "Введите число от 0 до 6" << endl;
-        Utils::open();
-    }
-    switch(stoi(n)){
+
+    int n = validateInt(0, 6);
+    switch(n){
         //Готово, корректно.
         case 0: {
             exit(0);
@@ -87,21 +95,34 @@ void Utils::open(){
         }
         case 5:{
             Utils::checkFile();
-            //Сортировка
+            cout << "Введите номер действия." << endl;
+            cout << "Отсортировать студентов у которых за все время обучения не более 25% " << endl;
+            cout << "1. Оценок 3" << endl;
+            cout << "2. Оценок 3 и 4" << endl;
+            cout << "3. Оценок 5" << endl;
+            cout << "4. Оценок 3 и 5" << endl;
+            cout << "5. Оценок 4 и 5" << endl;
+            int action = validateInt(1, 5);
+            FileUtil::sorting(action);
             Utils::open();
         }
         //Готово, корректно.
-        case 6:
+        case 6: {
             Utils::checkFile();
             string zach;
             cout << "Введите номер зачётки." << endl;
             getline(cin, zach);
-            while(!isValid(zach)){
+            while (!isValid(zach)) {
                 cout << "Номер введён неверно." << endl;
                 getline(cin, zach);
             }
             FileUtil::studentAction(stoi(zach), 3);
             Utils::open();
+        }
+        default:{
+            cout << "Магическая ошибка" << endl;
+            Utils::open();
+        }
     }
 }
 

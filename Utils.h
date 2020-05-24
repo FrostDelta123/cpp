@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include "FileUtil.h"
 #include "Date.h"
 
 using namespace std;
@@ -13,6 +14,7 @@ public:
     static Date parse(string);
     static void open();
     static void checkFile();
+    static int validateInt(int, int);
 };
 
 
