@@ -90,7 +90,7 @@ void Utils::open(){
             //Сортировка
             Utils::open();
         }
-
+        //Готово, корректно.
         case 6:
             Utils::checkFile();
             string zach;
@@ -100,11 +100,13 @@ void Utils::open(){
                 cout << "Номер введён неверно." << endl;
                 getline(cin, zach);
             }
-            FileUtil::allStudentMarks(stoi(zach));
+            FileUtil::studentAction(stoi(zach), 3);
             Utils::open();
     }
 }
 
+
+//заменил NULL на nullptr
 Date Utils::parse(string sdate) {
     Date r;
     Date bad = Date(-1, -1, -1);
@@ -118,7 +120,7 @@ Date Utils::parse(string sdate) {
     char *part, *posn;
     part = strtok_s(c_st, ".", &posn);
     int c = 0;
-    while (part != NULL) {
+    while (part != nullptr) {
         switch (c)
         {
             case 0:
@@ -133,10 +135,10 @@ Date Utils::parse(string sdate) {
             default:
                 break;
         }
-        part = strtok_s(NULL, ".", &posn);
+        part = strtok_s(nullptr, ".", &posn);
         c++;
     }
-    delete c_st;
+    delete[] c_st;
     delete part;
     posn = nullptr;
     if (c != 3)

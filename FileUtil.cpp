@@ -104,13 +104,16 @@ void FileUtil::printAll() {
     fclose(file);
 }
 
-//почти работает, исправить
 void FileUtil::printMarks(Student output){
     int count = output.sessionsCout;
     for(int i = 0; i < count; i++){
+        //Номер сессии
+        cout << "Сессия # " << endl;
         int subjCount = output.sessions[i].count;
         for(int x = 0; x < subjCount; x++){
-            cout << output.sessions[i].subj[x] << endl;
+            cout << output.sessions[i].subj[x];
+            cout << ": ";
+            cout << output.sessions[i].marks[x] << endl;
         }
     }
     Utils::open();
@@ -292,8 +295,8 @@ void FileUtil::recreateFileWithEdit(int zach){
                     }
                     output1.sessionsCout = stoi(str);
                     x = stoi(str);
-                    x++;
-                    for (int y = 1; y < x; y++) {
+                    for (int y = 0; y < x; y++) {
+                        //Фикс номра
                         cout << "Введите данные для сессии #" + to_string(y) << endl;
                         string subj, tem;
                         string count;
@@ -327,7 +330,7 @@ void FileUtil::recreateFileWithEdit(int zach){
                                 getline(cin, tem);
                             }
                             session.marks[num] = stoi(tem);
-                            output1.sessions[num] = session;
+                            output1.sessions[y] = session;
                         }
                     }
                     cout << "Информация о сессиях изменена." << endl;
@@ -456,8 +459,8 @@ void FileUtil::recreateFileWithDelete(int zach){
         }
         stud.sessionsCout = stoi(str);
         x = stoi(str);
-        x++;
-        for (int y = 1; y < x; y++) {
+        for (int y = 0; y < x; y++) {
+            //Номер сессии бля
             cout << "Введите данные для сессии #" + to_string(y) << endl;
             string subj, tem;
             string count;
@@ -490,8 +493,9 @@ void FileUtil::recreateFileWithDelete(int zach){
                     cout << "Оценка введена неверно, повторите. Введите число от 2 до 5." << endl;
                     getline(cin, tem);
                 }
+                cout << to_string(num) + " " + to_string(y) << endl;
                 session.marks[num] = stoi(tem);
-                stud.sessions[num] = session;
+                stud.sessions[y] = session;
             }
 
         }
