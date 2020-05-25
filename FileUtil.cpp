@@ -123,7 +123,6 @@ bool FileUtil::calculate(int action, Student student){
                     all++;
                 }
             }
-            cout << first/all << endl;
             return first/all < 0.25;
         }
         case 2:{
@@ -136,7 +135,6 @@ bool FileUtil::calculate(int action, Student student){
                     all++;
                 }
             }
-            cout << first/all << endl;
             return first/all < 0.25;
         }
         case 3:{
@@ -161,7 +159,6 @@ bool FileUtil::calculate(int action, Student student){
                     all++;
                 }
             }
-            cout << first/all << endl;
             return first/all < 0.25;
         }
         case 5:{

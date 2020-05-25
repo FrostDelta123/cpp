@@ -13,6 +13,8 @@ bool Utils::isValid(string &str) {
 void Utils::checkFile(){
     if(FileUtil::isEmpty()){
         cout << "Файл пуст. Перед работой требуется заполнить файл." << endl;
+        cout << "Введите данные первого студента для дальнейшей работы." << endl;
+        FileUtil::enterStudent();
     }
 }
 
@@ -38,6 +40,7 @@ void Utils::open(){
         cout << "Файл не найден или пуст, создаём. Перед работой требуется заполнить файл." << endl;
         file = fopen("person.dat", "a+t");
         fclose(file);
+
     }
     cout << "Введите номер действия: " << endl;
     cout << "1. Добавить студентов." << endl;
