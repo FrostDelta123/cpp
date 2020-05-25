@@ -43,7 +43,7 @@ bool FileUtil::validateStudent(const char num[]){
 }
 
 
-int FileUtil::getStudentCount(){
+int FileUtil::`getStudentCount`(){
     int i = 0;
     FILE *file;
     file = fopen("person.dat", "r+");
@@ -235,19 +235,16 @@ void FileUtil::studentAction(const char zach[], int action) {
                     case 1:{
                         FileUtil::recreateFileWithDelete(zach);
                         found = true;
-                        //Utils::open();
                         break;
                     }
                     case 2:{
                         FileUtil::recreateFileWithEdit(zach);
                         found = true;
-                        //Utils::open();
                         break;
                     }
                     case 3:{
                         FileUtil::allStudentMarks(zach);
                         found = true;
-                        //Utils::open();
                         break;
                     }
                     default: {

@@ -13,7 +13,6 @@ bool Utils::isValid(string &str) {
 void Utils::checkFile(){
     if(FileUtil::isEmpty()){
         cout << "Файл пуст. Перед работой требуется заполнить файл." << endl;
-        //Utils::open();
     }
 }
 
@@ -57,7 +56,6 @@ void Utils::open(){
         case 1:{
             FileUtil::enterStudent();
             break;
-            //Utils::open();
         }
         case 2:{
             Utils::checkFile();
@@ -66,13 +64,11 @@ void Utils::open(){
             getline(cin, zach);
             FileUtil::studentAction(zach.c_str(), 1);
             break;
-            //Utils::open();
         }
         case 3:{
             Utils::checkFile();
             FileUtil::printAll();
             break;
-            //Utils::open();
         }
         case 4:{
             Utils::checkFile();
@@ -81,9 +77,7 @@ void Utils::open(){
             getline(cin, zach);
             FileUtil::studentAction(zach.c_str(), 2);
             break;
-            //Utils::open();
         }
-        //Готово, корректно.
         case 5:{
             Utils::checkFile();
             cout << "Введите номер действия." << endl;
@@ -96,7 +90,6 @@ void Utils::open(){
             int action = validateInt(1, 5);
             FileUtil::sorting(action);
             break;
-            //Utils::open();
         }
         case 6: {
             Utils::checkFile();
@@ -105,11 +98,9 @@ void Utils::open(){
             getline(cin, zach);
             FileUtil::studentAction(zach.c_str(), 3);
             break;
-            //Utils::open();
         }
         default:{
             cout << "Магическая ошибка" << endl;
-            //Utils::open();
         }
     }
 }
