@@ -43,7 +43,7 @@ bool FileUtil::validateStudent(const char num[]){
 }
 
 
-int FileUtil::`getStudentCount`(){
+int FileUtil::getStudentCount(){
     int i = 0;
     FILE *file;
     file = fopen("person.dat", "r+");

@@ -5,8 +5,7 @@
 using namespace std;
 class Date {
 public:
-    //Конструктор класса
-    Date();
+    Date(); //Конструктор класса
     int day = 0, mon = 0, year = 0; //Стандартные значения
     static int isValid(int, int, int); // Проверка даты на валидность. День, месяц, год
     static bool isValid(string);// Проверка даты на валидность. Строка DD.MM.YYYY
