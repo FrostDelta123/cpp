@@ -15,11 +15,11 @@ public:
     static void printAll();
     static bool isEmpty();
     static void enterStudent();
-    static int validateStudent(int);
-    static void studentAction(int, int);
-    static void recreateFileWithDelete(int);
-    static void recreateFileWithEdit(int);
-    static void allStudentMarks(int);
+    static bool validateStudent(const char[]);
+    static void studentAction(const char[], int);
+    static void recreateFileWithDelete(const char[]);
+    static void recreateFileWithEdit(const char[]);
+    static void allStudentMarks(const char[]);
     static void printMarks(struct Student);
     static void sorting(int);
     static bool calculate(int, struct Student);

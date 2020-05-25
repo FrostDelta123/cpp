@@ -14,7 +14,7 @@ bool Utils::isValid(string &str) {
 void Utils::checkFile(){
     if(FileUtil::isEmpty()){
         cout << "Файл пуст. Перед работой требуется заполнить файл." << endl;
-        Utils::open();
+        //Utils::open();
     }
 }
 
@@ -52,46 +52,37 @@ void Utils::open(){
 
     int n = validateInt(0, 6);
     switch(n){
-        //Готово, корректно.
         case 0: {
             exit(0);
         }
-        //Готово, корректно.
         case 1:{
             FileUtil::enterStudent();
-            Utils::open();
+            break;
+            //Utils::open();
         }
-        //Готово, корректно.
         case 2:{
             Utils::checkFile();
             string zach;
             cout << "Введите номер зачётки для удаления." << endl;
             getline(cin, zach);
-            while(!isValid(zach)){
-                cout << "Номер введён неверно." << endl;
-                getline(cin, zach);
-            }
-            FileUtil::studentAction(stoi(zach), 1);
-            Utils::open();
+            FileUtil::studentAction(zach.c_str(), 1);
+            break;
+            //Utils::open();
         }
-        //Готово, корректно.
         case 3:{
             Utils::checkFile();
             FileUtil::printAll();
-            Utils::open();
+            break;
+            //Utils::open();
         }
-        //Готово, корректно.
         case 4:{
             Utils::checkFile();
             string zach;
             cout << "Введите номер зачётки для внесения правок." << endl;
             getline(cin, zach);
-            while(!isValid(zach)){
-                cout << "Номер введён неверно." << endl;
-                getline(cin, zach);
-            }
-            FileUtil::studentAction(stoi(zach), 2);
-            Utils::open();
+            FileUtil::studentAction(zach.c_str(), 2);
+            break;
+            //Utils::open();
         }
         //Готово, корректно.
         case 5:{
@@ -105,29 +96,26 @@ void Utils::open(){
             cout << "5. Оценок 4 и 5" << endl;
             int action = validateInt(1, 5);
             FileUtil::sorting(action);
+            break;
+            //Utils::open();
         }
-        //Готово, корректно.
         case 6: {
             Utils::checkFile();
             string zach;
             cout << "Введите номер зачётки." << endl;
             getline(cin, zach);
-            while (!isValid(zach)) {
-                cout << "Номер введён неверно." << endl;
-                getline(cin, zach);
-            }
-            FileUtil::studentAction(stoi(zach), 3);
-            Utils::open();
+            FileUtil::studentAction(zach.c_str(), 3);
+            break;
+            //Utils::open();
         }
         default:{
             cout << "Магическая ошибка" << endl;
-            Utils::open();
+            //Utils::open();
         }
     }
 }
 
 
-//заменил NULL на nullptr
 Date Utils::parse(string sdate) {
     Date r;
     Date bad = Date(-1, -1, -1);
