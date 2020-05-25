@@ -63,7 +63,6 @@ bool FileUtil::isEmpty(){
         base.seekg (0, ios::end);
         int size = base.tellg();
         base.seekg (0, ios::beg);
-
         if (size == 0){
             base.close();
             return true;
