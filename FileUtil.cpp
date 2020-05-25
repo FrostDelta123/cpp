@@ -19,7 +19,6 @@ struct Student{
     int postup;
     char kaf[25];
     char group[10];
-    //Переделать в char
     int zachetka;
     Session sessions[9];
     int sessionsCout;
@@ -43,7 +42,7 @@ int FileUtil::validateStudent(int num){
                     getline(cin, temp);
                 }
                 fclose(file);
-                FileUtil::validateStudent(stoi(temp));
+                return FileUtil::validateStudent(stoi(temp));
             }
         }
     }
@@ -103,9 +102,10 @@ void FileUtil::printAll() {
 
 void FileUtil::printMarks(Student output){
     int count = output.sessionsCout;
+    int sess = 0;
     for(int i = 0; i < count; i++){
-        //Номер сессии
-        cout << "Сессия # " << endl;
+        sess++;
+        cout << "Сессия # " + to_string(sess) << endl;
         int subjCount = output.sessions[i].count;
         for(int x = 0; x < subjCount; x++){
             cout << output.sessions[i].subj[x];
@@ -113,20 +113,17 @@ void FileUtil::printMarks(Student output){
             cout << output.sessions[i].marks[x] << endl;
         }
     }
-    Utils::open();
 }
 
 bool FileUtil::genderCheck(int gender, Student student){
     return student.gender == gender || gender == 3;
 }
 
-
-//Почти работает, дебагнуть и дофиксить.
 bool FileUtil::calculate(int action, Student student){
-    double first = 0, second = 0, all = 0;
+    double first = 0, all = 0;
+    int count = student.sessionsCout;
     switch (action) {
         case 1:{
-            int count = student.sessionsCout;
             for(int i = 0; i < count; i++){
                 int subjCount = student.sessions[i].count;
                 for(int x = 0; x < subjCount; x++){
@@ -136,28 +133,68 @@ bool FileUtil::calculate(int action, Student student){
                     all++;
                 }
             }
+            cout << first/all << endl;
             return first/all < 0.25;
         }
         case 2:{
-
+            for(int i = 0; i < count; i++){
+                int subjCount = student.sessions[i].count;
+                for(int x = 0; x < subjCount; x++){
+                    if(student.sessions[i].marks[x] == 3 || student.sessions[i].marks[x] == 4){
+                        first++;
+                    }
+                    all++;
+                }
+            }
+            cout << first/all << endl;
+            return first/all < 0.25;
         }
         case 3:{
-
+            for(int i = 0; i < count; i++){
+                int subjCount = student.sessions[i].count;
+                for(int x = 0; x < subjCount; x++){
+                    if(student.sessions[i].marks[x] == 5){
+                        first++;
+                    }
+                    all++;
+                }
+            }
+            return first/all < 0.25;
         }
         case 4:{
-
+            for(int i = 0; i < count; i++){
+                int subjCount = student.sessions[i].count;
+                for(int x = 0; x < subjCount; x++){
+                    if(student.sessions[i].marks[x] == 3 || student.sessions[i].marks[x] == 5){
+                        first++;
+                    }
+                    all++;
+                }
+            }
+            cout << first/all << endl;
+            return first/all < 0.25;
         }
         case 5:{
-
+            for(int i = 0; i < count; i++){
+                int subjCount = student.sessions[i].count;
+                for(int x = 0; x < subjCount; x++){
+                    if(student.sessions[i].marks[x] == 4 || student.sessions[i].marks[x] == 5){
+                        first++;
+                    }
+                    all++;
+                }
+            }
+            return first/all < 0.25;
         }
         default:{
             cout << "Магическая ошибка" << endl;
-            Utils::open();
         }
     }
+    return false;
 }
 
 void FileUtil::sorting(int action){
+    bool found = false;
     FILE *file;
     Student output;
     file = fopen("person.dat", "r+");
@@ -169,13 +206,17 @@ void FileUtil::sorting(int action){
     while (!feof(file)) {
         if (fread(&output, sizeof(struct Student), 1, file)) {
             if (FileUtil::calculate(action, output) && FileUtil::genderCheck(code, output)) {
+                found = true;
                 cout << "ФИО | Дата рождения | Год поступления | Кафедра | Группа | Номер зачётки" << endl;
                 printf_s("%s, %s, %d, %s, %s, %d \n", output.name, output.birth, output.postup, output.kaf, output.group, output.zachetka);
                 FileUtil::printMarks(output);
             }
         }
     }
-    Utils::open();
+    if(!found){
+        cout << "Студенты не найдены!" << endl;
+    }
+    fclose(file);
 }
 
 void FileUtil::allStudentMarks(int zach){
@@ -195,6 +236,7 @@ void FileUtil::studentAction(int zach, int action) {
     FILE *file;
     file = fopen("person.dat", "r+");
     Student output;
+    bool found = false;
     while (!feof(file)) {
         if (fread(&output, sizeof(struct Student), 1, file)) {
             if (output.zachetka == zach) {
@@ -202,14 +244,20 @@ void FileUtil::studentAction(int zach, int action) {
                 switch (action) {
                     case 1:{
                         FileUtil::recreateFileWithDelete(zach);
+                        found = true;
+                        Utils::open();
                         break;
                     }
                     case 2:{
                         FileUtil::recreateFileWithEdit(zach);
+                        found = true;
+                        Utils::open();
                         break;
                     }
                     case 3:{
                         FileUtil::allStudentMarks(zach);
+                        found = true;
+                        Utils::open();
                         break;
                     }
                     default: {
@@ -220,8 +268,9 @@ void FileUtil::studentAction(int zach, int action) {
             }
         }
     }
-    cout << "Студент не найден!" << endl;
-    Utils::open();
+    if(!found){
+        cout << "Студент не найден!" << endl;
+    }
 }
 
 void FileUtil::recreateFileWithEdit(int zach){
@@ -329,9 +378,10 @@ void FileUtil::recreateFileWithEdit(int zach){
                     cout << "Введите количество сессий" << endl;
                     output1.sessionsCout = str;
                     x = str;
+                    int sess = 0;
                     for (int y = 0; y < x; y++) {
-                        //Фикс номра
-                        cout << "Введите данные для сессии #" + to_string(y) << endl;
+                        sess++;
+                        cout << "Введите данные для сессии #" + to_string(sess) << endl;
                         string subj;
                         cout << "Введите количество предметов в данной сессии." << endl;
                         int count = Utils::validateInt(1, 10);
@@ -370,7 +420,6 @@ void FileUtil::recreateFileWithEdit(int zach){
     fclose(temp2);
     fclose(file2);
     remove("temp.dat");
-    Utils::open();
 }
 
 void FileUtil::recreateFileWithDelete(int zach){
@@ -386,8 +435,10 @@ void FileUtil::recreateFileWithDelete(int zach){
         }
     }
     fclose(file);
+    fclose(temp);
     remove("person.dat");
     file = fopen("person.dat", "a+t");
+    temp = fopen("temp.dat", "r+");
     n--;
     for (int i = 0; i < n; i++) {
         Student output1;
@@ -396,15 +447,11 @@ void FileUtil::recreateFileWithDelete(int zach){
             fwrite(&output1, sizeof(struct Student), 1, file);
         }
     }
-    cout << "Студент успешно удалён!" << endl;
     fclose(temp);
     fclose(file);
     remove("temp.dat");
-    Utils::open();
 }
 
-
-//TODO Валидатор числа. Важно
     void FileUtil::enterStudent() {
         Student stud;
         string fa, name, ot, fio, date, fak, kaf, group;
@@ -458,9 +505,10 @@ void FileUtil::recreateFileWithDelete(int zach){
         int str = Utils::validateInt(1, 9);
         stud.sessionsCout = str;
         x = str;
+        int sess = 0;
         for (int y = 0; y < x; y++) {
-            //Номер сессии бля
-            cout << "Введите данные для сессии #" + to_string(y) << endl;
+            sess++;
+            cout << "Введите данные для сессии #" + to_string(sess) << endl;
             string subj;
             cout << "Введите количество предметов в данной сессии." << endl;
             int count = Utils::validateInt(1, 10);
@@ -474,7 +522,6 @@ void FileUtil::recreateFileWithDelete(int zach){
                 strcpy_s(session.subj[num], ff);
                 cout << "Введите оценку по предмету " + subj << endl;
                 int tem = Utils::validateInt(2, 5);
-                cout << to_string(num) + " " + to_string(y) << endl;
                 session.marks[num] = tem;
                 stud.sessions[y] = session;
             }

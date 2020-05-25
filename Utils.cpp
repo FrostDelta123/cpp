@@ -93,6 +93,7 @@ void Utils::open(){
             FileUtil::studentAction(stoi(zach), 2);
             Utils::open();
         }
+        //Готово, корректно.
         case 5:{
             Utils::checkFile();
             cout << "Введите номер действия." << endl;
@@ -104,7 +105,6 @@ void Utils::open(){
             cout << "5. Оценок 4 и 5" << endl;
             int action = validateInt(1, 5);
             FileUtil::sorting(action);
-            Utils::open();
         }
         //Готово, корректно.
         case 6: {
@@ -142,8 +142,7 @@ Date Utils::parse(string sdate) {
     part = strtok_s(c_st, ".", &posn);
     int c = 0;
     while (part != nullptr) {
-        switch (c)
-        {
+        switch (c){
             case 0:
                 r.day = stoi(part);
                 break;
