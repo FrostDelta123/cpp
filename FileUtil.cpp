@@ -227,7 +227,6 @@ void FileUtil::studentAction(const char zach[], int action) {
     while (!feof(file)) {
         if (fread(&output, sizeof(struct Student), 1, file)) {
             if (strcmp(output.zachetka, zach) == 0) {
-                fclose(file);
                 switch (action) {
                     case 1:{
                         FileUtil::recreateFileWithDelete(zach);
@@ -252,6 +251,7 @@ void FileUtil::studentAction(const char zach[], int action) {
             }
         }
     }
+    fclose(file);
     if(!found){
         cout << "Студент не найден!" << endl;
     }
@@ -496,7 +496,7 @@ void FileUtil::recreateFileWithDelete(const char zach[]){
             cout << "Введите данные для сессии #" + to_string(sess) << endl;
             string subj;
             cout << "Введите количество предметов в данной сессии." << endl;
-            int count = Utils::validateInt(1, 10);
+            int count = Utils::validateInt(0, 10);
             Session session;
             session.count = count;
             for (int num = 0; num < count; num++) {
